@@ -8,11 +8,11 @@
                     v-model="dateValue"
                     min="2022-01-01"
                     max="2022-12-31"
-                    id="testDate"
                 />
                 <input
                     type="text"
                     v-model="txtCalName"
+                    @keyup.enter="add"
                     placeholder="일정 제목을 입력해주세요"
                 />
             </div>
@@ -42,7 +42,7 @@ export default {
     setup(props) {
         const baseModal = ref(null);
         const resolvePromise = ref(null);
-        const dateValue = ref("2022-10-10");
+        const dateValue = ref("2022-06-30");
         const txtCalName = ref("");
 
         const show = () => {
@@ -53,7 +53,10 @@ export default {
         };
 
         const add = () => {
-            resolvePromise.value({ date: dateValue, name: txtCalName.value });
+            resolvePromise.value({
+                date: dateValue.value,
+                name: txtCalName.value,
+            });
             baseAction();
         };
 
@@ -72,6 +75,7 @@ export default {
             show,
             add,
             cancel,
+            dateValue,
             txtCalName,
         };
     },

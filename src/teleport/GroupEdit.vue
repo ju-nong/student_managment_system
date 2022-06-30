@@ -6,6 +6,7 @@
                 <input
                     type="text"
                     v-model="txtGroupName"
+                    @keyup.enter="edit"
                     placeholder="그룹 이름을 입력해주세요"
                 />
             </div>
