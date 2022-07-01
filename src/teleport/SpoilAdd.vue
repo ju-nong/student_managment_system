@@ -1,11 +1,14 @@
 <template>
     <ModalBase ref="baseModal">
         <div class="content-container">
-            <h2>{{ content }}</h2>
-            <div class="groupForm">
+            <h2>{{ spoilOption.content }}</h2>
+            <div
+                class="groupForm"
+                v-if="spoilOption.type == 'add' || spoilOption.type == 'edit'"
+            >
                 <label for="grade">
                     학년
-                    <select v-model="txtGrade" id="grade">
+                    <select id="grade" v-model="spoilOption.grade">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -13,7 +16,7 @@
                 </label>
                 <label for="class">
                     반
-                    <select v-model="txtClass" id="class">
+                    <select id="class" v-model="spoilOption.class">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -23,10 +26,23 @@
                     </select>
                 </label>
             </div>
+            <div v-else>정말로 삭제하시겠습니까?</div>
         </div>
         <div class="buttons-container">
             <span>
-                <button class="btn confirm" @click="add">추가</button>
+                <button
+                    v-if="
+                        spoilOption.type == 'add' || spoilOption.type == 'edit'
+                    "
+                    class="btn confirm"
+                    @click="update"
+                >
+                    {{ spoilOption.type == "add" ? "추가" : "수정" }}
+                </button>
+                <button v-else class="btn confirm" @click="remove">삭제</button>
+                <!-- <button class="btn confirm" @click="update">
+                    {{ actionType.value == "add" ? "추가" : "생성" }}
+                </button> -->
                 <button class="btn cancel" @click="cancel">취소</button>
             </span>
         </div>
@@ -35,7 +51,7 @@
 
 <script>
 import ModalBase from "./ModalBase.vue";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 export default {
     name: "ModalSpoilAdd",
@@ -44,13 +60,13 @@ export default {
     },
 
     props: {
-        content: String,
+        option: Object,
     },
     setup(props) {
         const baseModal = ref(null);
         const resolvePromise = ref(null);
-        const txtGrade = ref("1");
-        const txtClass = ref("1");
+
+        const spoilOption = reactive(props.option);
 
         const show = () => {
             baseModal.value.open();
@@ -59,11 +75,15 @@ export default {
             });
         };
 
-        const add = () => {
+        const update = () => {
             resolvePromise.value({
-                grade: txtGrade.value,
-                class: txtClass.value,
+                grade: spoilOption.grade,
+                class: spoilOption.class,
             });
+            baseAction();
+        };
+        const remove = () => {
+            resolvePromise.value(true);
             baseAction();
         };
 
@@ -74,16 +94,14 @@ export default {
 
         const baseAction = () => {
             baseModal.value.close();
-            txtGrade.value = "1";
-            txtClass.value = "1";
         };
         return {
             baseModal,
             show,
-            add,
+            update,
+            remove,
             cancel,
-            txtGrade,
-            txtClass,
+            spoilOption,
         };
     },
 };

@@ -3,8 +3,16 @@
     <div class="wrap addBox">
         <div class="form">
             <h2>연합 정보 영역</h2>
-            <input type="text" placeholder="연합 이름을 입력해주세요." />
-            <input type="text" placeholder="연합 주소를 입력해주세요." />
+            <input
+                type="text"
+                placeholder="연합 이름을 입력해주세요."
+                v-model="unionName"
+            />
+            <input
+                type="text"
+                placeholder="연합 주소를 입력해주세요."
+                v-model="unionAddr"
+            />
         </div>
         <div class="form">
             <h2>멤버 영역</h2>
@@ -47,7 +55,7 @@
                     type="text"
                     placeholder="대장 이름"
                     @keyup.enter="addMember(0)"
-                    v-model="txt.leader"
+                    v-model="memberModel.leader"
                     v-bind:disabled="state.leader != ''"
                 />
                 <p>부대장 : 최대 7 명</p>
@@ -55,7 +63,7 @@
                     type="text"
                     placeholder="부대장 이름"
                     @keyup.enter="addMember(1)"
-                    v-model="txt.commander"
+                    v-model="memberModel.commander"
                     v-bind:disabled="state.commander.length > 6"
                 />
                 <p>말단 : 제한 없음</p>
@@ -63,7 +71,7 @@
                     type="text"
                     placeholder="말단 이름"
                     @keyup.enter="addMember(2)"
-                    v-model="txt.staff"
+                    v-model="memberModel.staff"
                 />
             </div>
         </div>
@@ -100,10 +108,28 @@
             <div class="groupHeader">
                 <button @click="showSpoilModal({ type: 'add' })">추가</button>
             </div>
-            <div class="groupBody"></div>
+            <div class="">
+                <SpoilView
+                    :parentSpoil="state.spoil"
+                    :childSpoil="state.spoil"
+                    @showSpoilModal="showSpoilModal"
+                    @showGroupModal="showGroupModal"
+                />
+            </div>
         </div>
 
-        <ModalSpoilAdd ref="modalSpoilAdd" :content="spoilAddContent" />
+        <ModalSpoilAdd ref="modalSpoilAdd" :option="spoilOption" />
+
+        <!-- <ModalSpoilAdd
+            ref="modalSpoilAdd"
+            :content="spoilOption.content"
+            :spoilType="spoilOption.type"
+            :spoilGrade="spoilOption.grade"
+            :spoilClass="spoilOption.class"
+        /> -->
+        <div class="form">
+            <button @click="addUnion">연합 생성</button>
+        </div>
     </div>
 </template>
 
@@ -119,6 +145,7 @@ import ModalCalEdit from "../teleport/CalEdit.vue";
 import GroupView from "./GroupView.vue";
 
 import ModalSpoilAdd from "../teleport/SpoilAdd.vue";
+import SpoilView from "./SpoilView.vue";
 export default {
     name: "AddPage",
     components: {
@@ -130,8 +157,12 @@ export default {
         ModalCalDelete,
         ModalCalEdit,
         ModalSpoilAdd,
+        SpoilView,
     },
     setup() {
+        const unionName = ref("");
+        const unionAddr = ref("");
+
         const modalGroupAdd = ref();
         const addContent = ref("");
 
@@ -152,9 +183,16 @@ export default {
         const calEditDate = ref("");
 
         const modalSpoilAdd = ref();
-        const spoilAddContent = ref("");
+        //const spoilAddContent = ref("");
 
-        const txt = reactive({
+        const spoilOption = reactive({
+            content: "",
+            type: "add",
+            grade: 1,
+            class: 1,
+        });
+
+        const memberModel = reactive({
             leader: "",
             commander: "",
             staff: "",
@@ -165,57 +203,76 @@ export default {
             commander: [],
             staff: [],
             group: [
-                // {
-                //     name: "그룹 A",
-                //     sub: [{ name: "그룹 A_1", sub: [], cal: [] }],
-                //     cal: [{ name: "그룹 A 일정 1", date: "2022-06-30" }],
-                // },
-                // {
-                //     name: "그룹 B",
-                //     sub: [
-                //         {
-                //             name: "그룹 B_1",
-                //             sub: [
-                //                 { name: "그룹 B_1_1", sub: [], cal: [] },
-                //                 {
-                //                     name: "그룹 B_1_2",
-                //                     sub: [],
-                //                     cal: [
-                //                         {
-                //                             name: "그룹 B_1_2 일정 1",
-                //                             date: "2022-07-01",
-                //                         },
-                //                     ],
-                //                 },
-                //             ],
-                //             cal: [
-                //                 { name: "그룹 B_1 일정 1", date: "2022-05-10" },
-                //                 { name: "그룹 B_1 일정 2", date: "2022-05-20" },
-                //                 { name: "그룹 B_1 일정 3", date: "2022-05-30" },
-                //             ],
-                //         },
-                //     ],
-                //     cal: [{ name: "그룹 B 일정 1", date: "2022-06-30" }],
-                // },
-                // {
-                //     name: "그룹 C",
-                //     sub: [{ name: "그룹 C_1", sub: [], cal: [] }],
-                //     cal: [{ name: "그룹 C 일정 1", date: "2022-04-30" }],
-                // },
+                {
+                    name: "그룹 A",
+                    sub: [{ name: "그룹 A_1", sub: [], cal: [] }],
+                    cal: [{ name: "그룹 A 일정 1", date: "2022-06-30" }],
+                },
+                {
+                    name: "그룹 B",
+                    sub: [
+                        {
+                            name: "그룹 B_1",
+                            sub: [
+                                { name: "그룹 B_1_1", sub: [], cal: [] },
+                                {
+                                    name: "그룹 B_1_2",
+                                    sub: [],
+                                    cal: [
+                                        {
+                                            name: "그룹 B_1_2 일정 1",
+                                            date: "2022-07-01",
+                                        },
+                                    ],
+                                },
+                            ],
+                            cal: [
+                                { name: "그룹 B_1 일정 1", date: "2022-05-10" },
+                                { name: "그룹 B_1 일정 2", date: "2022-05-20" },
+                                { name: "그룹 B_1 일정 3", date: "2022-05-30" },
+                            ],
+                        },
+                    ],
+                    cal: [{ name: "그룹 B 일정 1", date: "2022-06-30" }],
+                },
+                {
+                    name: "그룹 C",
+                    sub: [{ name: "그룹 C_1", sub: [], cal: [] }],
+                    cal: [{ name: "그룹 C 일정 1", date: "2022-04-30" }],
+                },
             ],
-            spoil: [],
+            spoil: [
+                {
+                    grade: 1,
+                    class: 1,
+                    group: [
+                        {
+                            name: "aaa",
+                            group: [],
+                        },
+                        { name: "ccc", group: [] },
+                    ],
+                    subTarget: [],
+                },
+                {
+                    grade: 2,
+                    class: 3,
+                    group: [{ name: "bbb", group: [] }],
+                    subTarget: [],
+                },
+            ],
         });
 
         const addMember = (type) => {
             if (type == 0) {
-                state.leader = txt.leader;
-                txt.leader = "";
+                state.leader = memberModel.leader;
+                memberModel.leader = "";
             } else if (type == 1) {
-                state.commander.push(txt.commander);
-                txt.commander = "";
+                state.commander.push(memberModel.commander);
+                memberModel.commander = "";
             } else {
-                state.staff.push(txt.staff);
-                txt.staff = "";
+                state.staff.push(memberModel.staff);
+                memberModel.staff = "";
             }
         };
 
@@ -229,11 +286,16 @@ export default {
             }
         };
 
-        const groupAdd = async (target = null) => {
+        const groupAdd = async (target = null, spoil = false, group = true) => {
             // 루트, 서브그룹 추가 모달
             const ok = await modalGroupAdd.value.show();
             if (!ok) {
                 // cancle
+                return;
+            }
+
+            if (spoil || group) {
+                target.group.push({ name: ok, group: [] });
                 return;
             }
 
@@ -246,54 +308,87 @@ export default {
             }
         };
 
-        const groupDelete = async (target, index) => {
+        const groupDelete = async (
+            target,
+            index,
+            spoil = false,
+            group = false
+        ) => {
             // 루트, 서브그룹 삭제 모달
             const ok = await modalGroupDelete.value.show();
             if (!ok) {
                 // cancle
                 return;
             }
+
             target.splice(index, 1);
         };
 
-        const groupEdit = async (target, index) => {
+        const groupEdit = async (
+            target,
+            index,
+            spoil = false,
+            group = false
+        ) => {
             // 루트, 서브그룹 수정 모달
             const ok = await modalGroupEdit.value.show();
             if (!ok) {
                 // cancle
                 return;
             }
-            target[index].name = ok;
+
+            if (group) {
+                target.name = ok;
+            } else {
+                target[index].name = ok;
+            }
         };
 
-        const showGroupModal = ({ type, target = null, index = null }) => {
+        const showGroupModal = ({
+            type,
+            target = null,
+            index = null,
+            spoil = false,
+            group = false,
+        }) => {
             if (type == "add") {
                 // 루트, 서브 그룹추가 모달 show
                 addContent.value =
                     target === null
                         ? "그룹 추가"
+                        : spoil
+                        ? `${target.grade}학년 ${target.class}반의 그룹 추가`
                         : `${target.name}의 서브그룹 추가`;
-                groupAdd(target);
-            } else if (type == "delete") {
-                // 루트, 서브 그룹삭제 모달 show
-                if (target.sub) {
-                    deleteContent.value = target.sub[index].name;
-                    target = target.sub;
-                } else {
-                    deleteContent.value = target[index].name;
-                }
 
-                groupDelete(target, index);
+                groupAdd(target, spoil, group);
             } else if (type == "edit") {
                 // 루트, 서브 그룹수정 모달 show
-                if (target.sub) {
-                    editContent.value = target.sub[index].name;
-                    target = target.sub;
+                if (group) {
+                    editContent.value = target.name;
                 } else {
-                    editContent.value = target[index].name;
+                    if (target.sub) {
+                        editContent.value = target.sub[index].name;
+                        target = target.sub;
+                    } else {
+                        editContent.value = target[index].name;
+                    }
+                }
+                groupEdit(target, index, spoil, group);
+            } else if (type == "delete") {
+                // 루트, 서브 그룹삭제 모달 show
+                if (group) {
+                    deleteContent.value = target.group[index].name;
+                    target = target.group;
+                } else {
+                    if (target.sub) {
+                        deleteContent.value = target.sub[index].name;
+                        target = target.sub;
+                    } else {
+                        deleteContent.value = target[index].name;
+                    }
                 }
 
-                groupEdit(target, index);
+                groupDelete(target, index, spoil, group);
             }
         };
 
@@ -357,7 +452,7 @@ export default {
             }
         };
 
-        const spoilAdd = async (target = null) => {
+        const spoil = async (type = null, target = null, index = null) => {
             // 루트, 서브 타겟 추가 모달
             const ok = await modalSpoilAdd.value.show();
 
@@ -365,36 +460,82 @@ export default {
                 return;
             }
 
-            const newTarget = {
-                grade: ok.grade,
-                class: ok.class,
-                groups: [],
-                subTarget: [],
-            };
+            if (type == "add") {
+                const newTarget = {
+                    grade: ok.grade,
+                    class: ok.class,
+                    group: [],
+                    subTarget: [],
+                };
 
-            if (target === null) {
-                // rootTarget Add
-                state.spoil.push(newTarget);
-            } else {
-                // subTarget Add
-                target.subTarget.push(newTarget);
+                if (target === null) {
+                    // rootTarget Add
+                    state.spoil.push(newTarget);
+                } else {
+                    // subTarget Add
+                    target.subTarget.push(newTarget);
+                }
+            } else if (type == "edit") {
+                target.grade = ok.grade;
+                target.class = ok.class;
+            } else if (type == "delete") {
+                if (ok) {
+                    target.splice(index, 1);
+                }
             }
-
-            console.log(state.spoil);
         };
 
         const showSpoilModal = ({ type, target = null, index = null }) => {
             if (type == "add") {
-                spoilAddContent.value =
+                spoilOption.content =
                     target === null ? "약탈 타겟 추가" : "약탈 서브타겟 추가";
 
-                spoilAdd(target);
+                spoilOption.type = "add";
+                spoilOption.grade = 1;
+                spoilOption.class = 1;
+            } else if (type == "edit") {
+                spoilOption.content = `${target.grade}학년 ${target.class}반 수정`;
+
+                spoilOption.type = "edit";
+                spoilOption.grade = target.grade;
+                spoilOption.class = target.class;
+            } else if (type == "delete") {
+                spoilOption.content = `${target[index].grade}학년 ${target[index].class}반 삭제`;
+                spoilOption.type = "delete";
+                spoilOption.grade = target[index].grade;
+                spoilOption.class = target[index].class;
+            }
+
+            spoil(type, target, index);
+        };
+
+        const addUnion = () => {
+            const union = JSON.stringify({
+                name: unionName.value,
+                address: unionAddr.value,
+                leader: state.leader,
+                commander: state.commander,
+                staff: state.staff,
+                group: state.group,
+                spoil: state.spoil,
+            });
+            if (!localStorage.unions) {
+                localStorage.setItem("unions", "[]");
+            }
+
+            let unions = localStorage.getItem("unions");
+            if (unions == "[]") {
+                localStorage.unions = `[${union}]`;
+            } else {
+                localStorage.unions = `${unions.slice(0, -1)},${union}]`;
             }
         };
 
         return {
+            unionName,
+            unionAddr,
             // 연합 멤버 변수
-            txt,
+            memberModel,
             // 연합 멤버 메소드
             addMember,
             delMember,
@@ -431,13 +572,17 @@ export default {
             // 약탈 레퍼런스
             modalSpoilAdd,
             // 약탈 컨텐츠
-            spoilAddContent,
+            //spoilAddContent,
+            spoilOption,
             // 약탈 메소드
-            spoilAdd,
+            spoil,
             showSpoilModal,
 
             // 전역 state
             state,
+
+            // 연합 생성
+            addUnion,
         };
     },
 };
@@ -460,117 +605,6 @@ export default {
         border-color: #fff;
         background-color: #000;
         color: #fff;
-    }
-}
-.groupBody {
-    display: flex;
-    > ul {
-        width: 100%;
-        > li::after {
-            width: 0 !important;
-        }
-        > li {
-            > ul {
-                margin-left: 15px;
-            }
-        }
-    }
-    ul li::before {
-        content: "";
-        position: absolute;
-        border-left: 2px solid #999;
-        width: 1px;
-        height: calc(100% - 58px);
-        top: 35px;
-        left: 30px;
-    }
-    ul li::after {
-        content: "";
-        position: absolute;
-        background-color: #999;
-        width: 34px;
-        height: 2px;
-        top: 15px;
-        left: -34px;
-    }
-    .group {
-        margin-left: 15px;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-
-        .calList > .groupInline {
-            border-color: #ff0000 !important;
-        }
-        .groupInline {
-            display: inline-block;
-            padding-left: 10px;
-            border-radius: 10px;
-            border: 2px solid #999;
-            overflow: hidden;
-            height: 35px;
-            > div {
-                display: inline-block;
-            }
-            .groupTxtBox {
-                font-size: 18px;
-                padding-right: 10px;
-            }
-            .groupBtnBox {
-                height: 100%;
-                button {
-                    height: 100%;
-                    border-color: transparent;
-                    border-radius: 5px;
-                    background-color: transparent;
-                    font-weight: bold;
-                    margin: 0 3px;
-                    cursor: pointer;
-                    padding: 0 3px;
-                    transition: all 0.3s;
-                }
-                button:hover {
-                    background-color: #000;
-                    color: #fff;
-                }
-            }
-        }
-
-        > li {
-            margin: 25px 0 0 15px;
-            position: relative;
-            > ul {
-                margin-left: 50px;
-            }
-        }
-    }
-}
-
-.content-container {
-    > h2 {
-        padding-bottom: 10px;
-        border-bottom: 1px solid #999;
-        margin-bottom: 10px;
-    }
-
-    .groupForm {
-        display: flex;
-        flex-direction: column;
-        > input {
-            width: 100%;
-            padding: 3px 5px;
-            margin: 10px 0;
-        }
-    }
-}
-
-.buttons-container > span {
-    float: right;
-    button {
-        padding: 3px 5px;
-        margin: 0 5px;
-        cursor: pointer;
     }
 }
 </style>

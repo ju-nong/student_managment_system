@@ -31,9 +31,16 @@ export default {
     padding: 0;
     box-sizing: border-box;
 }
+ul {
+    list-style: none;
+}
 a {
     color: #000;
     text-decoration: none;
+}
+button {
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 #app {
@@ -61,6 +68,15 @@ a {
         padding: 30px;
         display: flex;
         flex-direction: column;
+        > button {
+            background-color: #3b88c3;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 26px;
+            padding: 5px;
+            font-weight: bold;
+            border-color: transparent;
+        }
         > h2 {
             text-align: left;
             border-bottom: 1px solid #999;
