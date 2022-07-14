@@ -3,7 +3,8 @@
     <div class="wrap addBox">
         <Info />
         <Member />
-        <div class="form">
+        <Calendar />
+        <!-- <div class="form">
             <h2>일정 영역</h2>
             <div class="groupHeader">
                 <button @click="showGroupModal({ type: 'add' })">
@@ -19,7 +20,7 @@
                     @showCalModal="showCalModal"
                 ></GroupView>
             </div>
-        </div>
+        </div> -->
         <ModalGroupAdd ref="modalGroupAdd" :content="addContent" />
         <ModalGroupDelete ref="modalGroupDelete" :content="deleteContent" />
         <ModalGroupEdit ref="modalGroupEdit" :content="editContent" />

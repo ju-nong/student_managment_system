@@ -2,7 +2,11 @@ import { defineStore } from "pinia";
 
 export const useMemberStore = defineStore("member", {
     state: () => {
-        return { leader: null, commander: [], staff: [] };
+        return {
+            leader: null,
+            commander: [],
+            staff: [],
+        };
     },
     actions: {
         setLeader(name) {

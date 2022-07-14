@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 
 export const useInfoStore = defineStore("info", {
     state: () => {
-        return { name: "", address: "" };
+        return {
+            name: "",
+            address: "",
+        };
     },
     actions: {
         setName(name) {

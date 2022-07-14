@@ -1,3 +1,5 @@
+export { default as GroupModal } from "./Group";
+
 export { default as ModalCalAdd } from "./CalAdd";
 export { default as ModalCalEdit } from "./CalEdit";
 export { default as ModalCalDelete } from "./CalDelete";
