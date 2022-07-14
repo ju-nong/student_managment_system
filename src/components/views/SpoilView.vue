@@ -58,7 +58,7 @@
 
 <script>
 import { reactive, ref } from "vue";
-import SpoilGroupView from "./SpoilGroupView.vue";
+import { SpoilGroupView } from "@views";
 export default {
     name: "SpoilView",
     props: { parentSpoil: Array, childSpoil: Array },

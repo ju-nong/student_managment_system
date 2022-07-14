@@ -135,17 +135,20 @@
 
 <script>
 import { reactive, ref } from "vue";
-import ModalGroupAdd from "../teleport/GroupAdd.vue";
-import ModalGroupDelete from "../teleport/GroupDelete.vue";
-import ModalGroupEdit from "../teleport/GroupEdit.vue";
+import { useRouter } from "vue-router";
 
-import ModalCalAdd from "../teleport/CalAdd.vue";
-import ModalCalDelete from "../teleport/CalDelete.vue";
-import ModalCalEdit from "../teleport/CalEdit.vue";
-import GroupView from "./GroupView.vue";
+import {
+    ModalGroupAdd,
+    ModalGroupDelete,
+    ModalGroupEdit,
+    ModalCalAdd,
+    ModalCalDelete,
+    ModalCalEdit,
+    ModalSpoilAdd,
+} from "@teleport";
 
-import ModalSpoilAdd from "../teleport/SpoilAdd.vue";
-import SpoilView from "./SpoilView.vue";
+import { GroupView, SpoilView } from "@views";
+
 export default {
     name: "AddPage",
     components: {
@@ -509,6 +512,8 @@ export default {
             spoil(type, target, index);
         };
 
+        const router = useRouter();
+
         const addUnion = () => {
             const union = JSON.stringify({
                 name: unionName.value,
@@ -522,13 +527,15 @@ export default {
             if (!localStorage.unions) {
                 localStorage.setItem("unions", "[]");
             }
-
             let unions = localStorage.getItem("unions");
             if (unions == "[]") {
                 localStorage.unions = `[${union}]`;
             } else {
                 localStorage.unions = `${unions.slice(0, -1)},${union}]`;
             }
+
+            alert("연합이 생성되었습니다.");
+            router.push({ name: "MainPage" });
         };
 
         return {
