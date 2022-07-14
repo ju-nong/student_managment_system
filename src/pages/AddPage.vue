@@ -1,80 +1,8 @@
 <template>
     <h1>연합을 생성해봐요</h1>
     <div class="wrap addBox">
-        <div class="form">
-            <h2>연합 정보 영역</h2>
-            <input
-                type="text"
-                placeholder="연합 이름을 입력해주세요."
-                v-model="unionName"
-            />
-            <input
-                type="text"
-                placeholder="연합 주소를 입력해주세요."
-                v-model="unionAddr"
-            />
-        </div>
-        <div class="form">
-            <h2>멤버 영역</h2>
-            <div class="mInfo">
-                <p>대장</p>
-                <p>:</p>
-                <div class="nameList">
-                    <span v-if="state.leader != ''" @click="delMember(0)">{{
-                        state.leader
-                    }}</span>
-                </div>
-            </div>
-            <div class="mInfo">
-                <p>부대장</p>
-                <p>:</p>
-                <div class="nameList">
-                    <span
-                        v-for="(commander, index) in state.commander"
-                        @click="delMember(1, index)"
-                        :key="index"
-                        >{{ commander }}
-                    </span>
-                </div>
-            </div>
-            <div class="mInfo">
-                <p>말단</p>
-                <p>:</p>
-                <div class="nameList">
-                    <span
-                        v-for="(staff, index) in state.staff"
-                        @click="delMember(2, index)"
-                        :key="index"
-                        >{{ staff }}
-                    </span>
-                </div>
-            </div>
-            <div class="commitForm">
-                <p>대장 : 1명 ( 필수 )</p>
-                <input
-                    type="text"
-                    placeholder="대장 이름"
-                    @keyup.enter="addMember(0)"
-                    v-model="memberModel.leader"
-                    v-bind:disabled="state.leader != ''"
-                />
-                <p>부대장 : 최대 7 명</p>
-                <input
-                    type="text"
-                    placeholder="부대장 이름"
-                    @keyup.enter="addMember(1)"
-                    v-model="memberModel.commander"
-                    v-bind:disabled="state.commander.length > 6"
-                />
-                <p>말단 : 제한 없음</p>
-                <input
-                    type="text"
-                    placeholder="말단 이름"
-                    @keyup.enter="addMember(2)"
-                    v-model="memberModel.staff"
-                />
-            </div>
-        </div>
+        <Info />
+        <Member />
         <div class="form">
             <h2>일정 영역</h2>
             <div class="groupHeader">
@@ -120,13 +48,6 @@
 
         <ModalSpoilAdd ref="modalSpoilAdd" :option="spoilOption" />
 
-        <!-- <ModalSpoilAdd
-            ref="modalSpoilAdd"
-            :content="spoilOption.content"
-            :spoilType="spoilOption.type"
-            :spoilGrade="spoilOption.grade"
-            :spoilClass="spoilOption.class"
-        /> -->
         <div class="form">
             <button @click="addUnion">연합 생성</button>
         </div>
@@ -136,6 +57,9 @@
 <script>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useInfoStore, useMemberStore } from "@store";
+
+import { Info, Member, Calendar, Union } from "@area";
 
 import {
     ModalGroupAdd,
@@ -152,6 +76,10 @@ import { GroupView, SpoilView } from "@views";
 export default {
     name: "AddPage",
     components: {
+        Info,
+        Member,
+        Calendar,
+        Union,
         GroupView,
         ModalGroupAdd,
         ModalGroupDelete,
@@ -163,8 +91,9 @@ export default {
         SpoilView,
     },
     setup() {
-        const unionName = ref("");
-        const unionAddr = ref("");
+        const router = useRouter();
+        const info = useInfoStore();
+        const member = useMemberStore();
 
         const modalGroupAdd = ref();
         const addContent = ref("");
@@ -186,7 +115,6 @@ export default {
         const calEditDate = ref("");
 
         const modalSpoilAdd = ref();
-        //const spoilAddContent = ref("");
 
         const spoilOption = reactive({
             content: "",
@@ -195,16 +123,7 @@ export default {
             class: 1,
         });
 
-        const memberModel = reactive({
-            leader: "",
-            commander: "",
-            staff: "",
-        });
-
         const state = reactive({
-            leader: "",
-            commander: [],
-            staff: [],
             group: [
                 {
                     name: "그룹 A",
@@ -266,29 +185,6 @@ export default {
             ],
         });
 
-        const addMember = (type) => {
-            if (type == 0) {
-                state.leader = memberModel.leader;
-                memberModel.leader = "";
-            } else if (type == 1) {
-                state.commander.push(memberModel.commander);
-                memberModel.commander = "";
-            } else {
-                state.staff.push(memberModel.staff);
-                memberModel.staff = "";
-            }
-        };
-
-        const delMember = (type, index = null) => {
-            if (type == 0) {
-                state.leader = "";
-            } else if (type == 1) {
-                state.commander.splice(index, 1);
-            } else {
-                state.staff.splice(index, 1);
-            }
-        };
-
         const groupAdd = async (target = null, spoil = false, group = true) => {
             // 루트, 서브그룹 추가 모달
             const ok = await modalGroupAdd.value.show();
@@ -315,7 +211,7 @@ export default {
             target,
             index,
             spoil = false,
-            group = false
+            group = false,
         ) => {
             // 루트, 서브그룹 삭제 모달
             const ok = await modalGroupDelete.value.show();
@@ -331,7 +227,7 @@ export default {
             target,
             index,
             spoil = false,
-            group = false
+            group = false,
         ) => {
             // 루트, 서브그룹 수정 모달
             const ok = await modalGroupEdit.value.show();
@@ -512,15 +408,13 @@ export default {
             spoil(type, target, index);
         };
 
-        const router = useRouter();
-
         const addUnion = () => {
             const union = JSON.stringify({
-                name: unionName.value,
-                address: unionAddr.value,
-                leader: state.leader,
-                commander: state.commander,
-                staff: state.staff,
+                name: info.getName,
+                address: info.getAddress,
+                leader: member.getLeader,
+                commander: member.getCommander,
+                staff: member.getStaff,
                 group: state.group,
                 spoil: state.spoil,
             });
@@ -539,14 +433,6 @@ export default {
         };
 
         return {
-            unionName,
-            unionAddr,
-            // 연합 멤버 변수
-            memberModel,
-            // 연합 멤버 메소드
-            addMember,
-            delMember,
-
             // 그룹 레퍼런스
             modalGroupAdd,
             modalGroupDelete,
@@ -612,6 +498,19 @@ export default {
         border-color: #fff;
         background-color: #000;
         color: #fff;
+    }
+}
+
+.groupBody {
+    position: relative;
+    text-align: left;
+    background-color: #2e2e2e;
+    padding: 32px;
+    > .group {
+        > li::before,
+        > li::after {
+            border: 0;
+        }
     }
 }
 </style>

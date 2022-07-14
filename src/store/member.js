@@ -2,21 +2,30 @@ import { defineStore } from "pinia";
 
 export const useMemberStore = defineStore("member", {
     state: () => {
-        return { list: [] };
+        return { leader: null, commander: [], staff: [] };
     },
     actions: {
-        addMember(name) {
-            this.list.push(name);
+        setLeader(name) {
+            this.leader = name;
         },
-        delMember(index) {
-            this.list.splice(index, 1);
+        addCommander(name) {
+            this.commander.push(name);
         },
-        printName(index) {
-            return this.list[index];
+        addStaff(name) {
+            this.staff.push(name);
+        },
+        kickCommander(index) {
+            this.commander.splice(index, 1);
+        },
+        kickStaff(index) {
+            this.staff.splice(index, 1);
         },
     },
     getters: {
-        getCount: (state) => state.list.length,
-        getAll: (state) => state.list,
+        getAll: (state) => state,
+        getLeader: (state) => state.leader,
+        getCommander: (state) => state.commander,
+        getCommanderLen: (state) => state.commander.length,
+        getStaff: (state) => state.staff,
     },
 });

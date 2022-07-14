@@ -1,14 +1,14 @@
 <template>
     <ul class="group">
-        <li v-for="(group, index) in childGroup" :key="index">
+        <li v-for="(group, index) in childGroup" :key="index" class="gro">
             <div class="groupInline">
-                <div class="groupTxtBox">
+                <div class="txt">
                     <span v-for="(pName, pIndex) in parentNames" :key="pIndex">
                         {{ pName }} /
                     </span>
                     {{ group.name }}
                 </div>
-                <div class="groupBtnBox">
+                <div class="btn">
                     <button
                         @click="
                             $emit('showCalModal', {
@@ -17,7 +17,11 @@
                             })
                         "
                     >
-                        일정
+                        <img
+                            src="@assets/images/calendar.png"
+                            alt=""
+                            class="calIcon"
+                        />
                     </button>
                     <button
                         @click="
@@ -27,7 +31,11 @@
                             })
                         "
                     >
-                        생성
+                        <img
+                            src="@assets/images/plus.jpg"
+                            alt=""
+                            class="plusIcon"
+                        />
                     </button>
                     <button
                         @click="
@@ -38,7 +46,11 @@
                             })
                         "
                     >
-                        수정
+                        <img
+                            src="@assets/images/edit.jpg"
+                            alt=""
+                            class="editIcon"
+                        />
                     </button>
                     <button
                         @click="
@@ -49,7 +61,11 @@
                             })
                         "
                     >
-                        삭제
+                        <img
+                            src="@assets/images/delete.png"
+                            alt=""
+                            class="deleteIcon"
+                        />
                     </button>
                 </div>
             </div>
@@ -57,13 +73,11 @@
                 <li
                     v-for="(cal, cIndex) in group.cal"
                     :key="cIndex"
-                    class="calList"
+                    class="cal"
                 >
                     <div class="groupInline">
-                        <div class="groupTxtBox">
-                            {{ cal.name }} / {{ cal.date }}
-                        </div>
-                        <div class="groupBtnBox">
+                        <div class="txt">{{ cal.name }} / {{ cal.date }}</div>
+                        <div class="btn">
                             <button
                                 @click="
                                     $emit('showCalModal', {
@@ -73,7 +87,7 @@
                                     })
                                 "
                             >
-                                수정
+                                <img src="@assets/images/plus.jpg" alt="" />
                             </button>
                             <button
                                 @click="
@@ -84,7 +98,7 @@
                                     })
                                 "
                             >
-                                삭제
+                                <img src="@assets/images/delete.png" alt="" />
                             </button>
                         </div>
                     </div>
@@ -112,112 +126,95 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .groupBody {
-    display: flex;
-    > ul {
-        width: 100%;
-        > li::after {
-            width: 0 !important;
-        }
+    > .group {
         > li {
-            > ul {
-                margin-left: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            > .groupInline {
+                > .txt {
+                    color: #ffcf00 !important;
+                }
             }
         }
-    }
-    ul li::before {
-        content: "";
-        position: absolute;
-        border-left: 2px solid #999;
-        width: 1px;
-        height: calc(100% - 58px);
-        top: 35px;
-        left: 30px;
-    }
-    ul li::after {
-        content: "";
-        position: absolute;
-        background-color: #999;
-        width: 34px;
-        height: 2px;
-        top: 15px;
-        left: -34px;
     }
     .group {
-        margin-left: 15px;
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-
-        .calList > .groupInline {
-            border-color: #ff0000 !important;
-        }
-        .groupInline {
-            display: inline-block;
-            padding-left: 10px;
-            border-radius: 10px;
-            border: 2px solid #999;
-            overflow: hidden;
-            height: 35px;
-            > div {
-                display: inline-block;
-            }
-            .groupTxtBox {
-                font-size: 18px;
-                padding-right: 10px;
-            }
-            .groupBtnBox {
-                height: 100%;
-                button {
-                    height: 100%;
-                    border-color: transparent;
-                    border-radius: 5px;
-                    background-color: transparent;
-                    font-weight: bold;
-                    margin: 0 3px;
-                    padding: 0 3px;
-                }
-                button:hover {
-                    background-color: #000;
-                    color: #fff;
-                }
-            }
-        }
-
-        > li {
-            margin: 25px 0 0 15px;
+        position: relative;
+        padding-left: 32px;
+        li {
             position: relative;
-            > ul {
-                margin-left: 50px;
+            line-height: 30px;
+            ::before,
+            ::after {
+                content: "";
+                position: absolute;
+                left: -12px;
+            }
+            .groupInline {
+                position: relative;
+                background-color: #2e2e2e;
+                display: flex;
+                justify-content: space-between;
+                cursor: pointer;
+                transition: $ts3;
+                z-index: 1;
+                .txt {
+                    border-radius: 5px;
+                    padding: 0 5px;
+                }
+                .btn {
+                    opacity: 0;
+                    transition: $ts3;
+                    button {
+                        margin-left: 20px;
+                        vertical-align: middle;
+                        background: transparent;
+                        border: 0;
+                        img {
+                            width: 30px;
+                            height: 30px;
+                        }
+                        .calIcon {
+                            filter: invert(100%);
+                        }
+                    }
+                }
+            }
+            .groupInline:hover {
+                .txt {
+                    background-color: #ffcf00;
+                    color: #fff !important;
+                }
+                .btn {
+                    opacity: 1;
+                }
+            }
+            .group:last-of-type li::after {
+                top: calc(-100% + 14px);
+                height: 100%;
             }
         }
-    }
-}
-
-.content-container {
-    > h2 {
-        padding-bottom: 10px;
-        border-bottom: 1px solid #999;
-        margin-bottom: 10px;
-    }
-
-    .groupForm {
-        display: flex;
-        flex-direction: column;
-        > input {
-            width: 100%;
-            padding: 3px 5px;
-            margin: 10px 0;
+        .gro > .groupInline .txt {
+            font-weight: bold;
+            font-size: 22px;
+            color: #abb8c2;
+        }
+        .cal > .groupInline .txt {
+            color: #eee;
         }
     }
 }
 
-.buttons-container > span {
-    float: right;
-    button {
-        padding: 3px 5px;
-        margin: 0 5px;
-    }
+li::before {
+    border-top: $bw;
+    top: 14px;
+    width: 8px;
+}
+
+li::after {
+    border-left: $bw;
+    height: 100%;
+    top: 2px;
 }
 </style>

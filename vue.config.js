@@ -7,17 +7,13 @@ module.exports = defineConfig({
         resolve: {
             alias: {
                 "@": path.join(__dirname, "src"),
-<<<<<<< HEAD
                 "@router": path.join(__dirname, "src/router"),
                 "@store": path.join(__dirname, "src/store"),
                 "@pages": path.join(__dirname, "src/pages"),
+                "@assets": path.join(__dirname, "src/assets"),
                 "@components": path.join(__dirname, "src/components"),
+                "@area": path.join(__dirname, "src/components/area"),
                 "@views": path.join(__dirname, "src/components/views"),
-=======
-                "@components": path.join(__dirname, "src/components"),
-                "@router": path.join(__dirname, "src/router"),
-                "@store": path.join(__dirname, "src/store"),
->>>>>>> 27f5a1464d4f73fa90487ad8017425ca64b03162
                 "@teleport": path.join(__dirname, "src/teleport"),
             },
             extensions: [".js", ".vue", ".json"],
@@ -26,13 +22,7 @@ module.exports = defineConfig({
     css: {
         loaderOptions: {
             sass: {
-<<<<<<< HEAD
                 additionalData: `@import "~@/assets/scss/style.scss";`,
-=======
-                additionalData: `
-                    @import "~@/assets/scss/style.scss";
-                `,
->>>>>>> 27f5a1464d4f73fa90487ad8017425ca64b03162
             },
         },
     },
