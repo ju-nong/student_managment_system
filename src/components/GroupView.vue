@@ -126,29 +126,30 @@ export default {
             }
         }
     }
-    ul li::before {
-        content: "";
-        position: absolute;
-        border-left: 2px solid #999;
-        width: 1px;
-        height: calc(100% - 58px);
-        top: 35px;
-        left: 30px;
-    }
-    ul li::after {
-        content: "";
-        position: absolute;
-        background-color: #999;
-        width: 34px;
-        height: 2px;
-        top: 15px;
-        left: -34px;
-    }
     .group {
         margin-left: 15px;
         display: flex;
         flex-direction: column;
         text-align: left;
+
+        ul::before {
+            content: "";
+            position: absolute;
+            border-left: 2px solid #999;
+            width: 1px;
+            height: calc(100% - 58px);
+            top: 35px;
+            left: 30px;
+        }
+        ul li::after {
+            content: "";
+            position: absolute;
+            background-color: #999;
+            width: 34px;
+            height: 2px;
+            top: 15px;
+            left: -34px;
+        }
 
         .calList > .groupInline {
             border-color: #ff0000 !important;

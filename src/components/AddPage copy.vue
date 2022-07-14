@@ -92,7 +92,9 @@
                 ></GroupView>
             </div>
         </div>
-        <GroupModal ref="groupModal" :attr="sendGroupAttr" />
+        <ModalGroupAdd ref="modalGroupAdd" :content="addContent" />
+        <ModalGroupDelete ref="modalGroupDelete" :content="deleteContent" />
+        <ModalGroupEdit ref="modalGroupEdit" :content="editContent" />
         <ModalCalAdd ref="modalCalAdd" :content="calAddContent" />
         <ModalCalDelete ref="modalCalDelete" :content="calDeleteContent" />
         <ModalCalEdit
@@ -116,7 +118,7 @@
             </div>
         </div>
 
-        <SpoilModal ref="spoilModal" :option="spoilOption" />
+        <ModalSpoilAdd ref="modalSpoilAdd" :option="spoilOption" />
 
         <div class="form">
             <button @click="addUnion">연합 생성</button>
@@ -126,35 +128,42 @@
 
 <script>
 import { reactive, ref } from "vue";
-import GroupModal from "../teleport/GroupModal.vue";
+import ModalGroupAdd from "../teleport/GroupAdd.vue";
+import ModalGroupDelete from "../teleport/GroupDelete.vue";
+import ModalGroupEdit from "../teleport/GroupEdit.vue";
 
 import ModalCalAdd from "../teleport/CalAdd.vue";
 import ModalCalDelete from "../teleport/CalDelete.vue";
 import ModalCalEdit from "../teleport/CalEdit.vue";
 import GroupView from "./GroupView.vue";
 
-import SpoilModal from "../teleport/SpoilModal.vue";
+import ModalSpoilAdd from "../teleport/SpoilModal.vue";
 import SpoilView from "./SpoilView.vue";
 export default {
     name: "AddPage",
     components: {
         GroupView,
-        GroupModal,
+        ModalGroupAdd,
+        ModalGroupDelete,
+        ModalGroupEdit,
         ModalCalAdd,
         ModalCalDelete,
         ModalCalEdit,
-        SpoilModal,
+        ModalSpoilAdd,
         SpoilView,
     },
     setup() {
         const unionName = ref("");
         const unionAddr = ref("");
 
-        const groupModal = ref();
-        const sendGroupAttr = reactive({
-            content: "",
-            type: "",
-        });
+        const modalGroupAdd = ref();
+        const addContent = ref("");
+
+        const modalGroupDelete = ref();
+        const deleteContent = ref("");
+
+        const modalGroupEdit = ref();
+        const editContent = ref("");
 
         const modalCalAdd = ref();
         const calAddContent = ref("");
@@ -166,7 +175,7 @@ export default {
         const calEditContent = ref("");
         const calEditDate = ref("");
 
-        const spoilModal = ref();
+        const modalSpoilAdd = ref();
         //const spoilAddContent = ref("");
 
         const spoilOption = reactive({
@@ -270,31 +279,25 @@ export default {
             }
         };
 
-        const groupDAO = async ({ type, target, index, spoil }) => {
-            const ok = await groupModal.value.show();
-
+        const groupAdd = async (target = null, spoil = false, group = true) => {
+            // 루트, 서브그룹 추가 모달
+            const ok = await modalGroupAdd.value.show();
             if (!ok) {
-                // GroupModal cancle event
+                // cancle
                 return;
             }
 
-            if (type == "add") {
-                // 그룹 추가
-                if (spoil) {
-                    // 약탈의 그룹 추가
-                    target.group.push({ name: ok, group: [] });
-                    return;
-                }
+            if (spoil || group) {
+                target.group.push({ name: ok, group: [] });
+                return;
+            }
 
-                const newGroup = { name: ok, sub: [], cal: [] };
-
-                if (target === null) {
-                    // rootGroup Add
-                    state.group.push(newGroup);
-                } else {
-                    // subGroup Add
-                    target.sub.push(newGroup);
-                }
+            if (target === null) {
+                // rootGroup Add
+                state.group.push({ name: ok, sub: [], cal: [] });
+            } else {
+                // subGroup Add
+                target.sub.push({ name: ok, sub: [], cal: [] });
             }
         };
 
@@ -334,53 +337,52 @@ export default {
             }
         };
 
-        const showGroupModal = ({ type, target, index, spoil }) => {
-            sendGroupAttr.type = type;
+        const showGroupModal = ({
+            type,
+            target = null,
+            index = null,
+            spoil = false,
+            group = false,
+        }) => {
             if (type == "add") {
                 // 루트, 서브 그룹추가 모달 show
-
-                sendGroupAttr.content =
-                    target === undefined
-                        ? "그룹"
+                addContent.value =
+                    target === null
+                        ? "그룹 추가"
                         : spoil
-                        ? `${target.grade}학년 ${target.class}반의 그룹`
-                        : `${target.name}의 서브그룹`;
-            }
-            groupDAO({
-                type: type,
-                target: target,
-                index: index,
-                spoil: spoil,
-            });
-            // } else if (type == "edit") {
-            //     // 루트, 서브 그룹수정 모달 show
-            //     if (group) {
-            //         editContent.value = target.name;
-            //     } else {
-            //         if (target.sub) {
-            //             editContent.value = target.sub[index].name;
-            //             target = target.sub;
-            //         } else {
-            //             editContent.value = target[index].name;
-            //         }
-            //     }
-            //     groupEdit(target, index, spoil, group);
-            // } else if (type == "delete") {
-            //     // 루트, 서브 그룹삭제 모달 show
-            //     if (group) {
-            //         deleteContent.value = target.group[index].name;
-            //         target = target.group;
-            //     } else {
-            //         if (target.sub) {
-            //             deleteContent.value = target.sub[index].name;
-            //             target = target.sub;
-            //         } else {
-            //             deleteContent.value = target[index].name;
-            //         }
-            //     }
+                        ? `${target.grade}학년 ${target.class}반의 그룹 추가`
+                        : `${target.name}의 서브그룹 추가`;
 
-            //     groupDelete(target, index, spoil, group);
-            // }
+                groupAdd(target, spoil, group);
+            } else if (type == "edit") {
+                // 루트, 서브 그룹수정 모달 show
+                if (group) {
+                    editContent.value = target.name;
+                } else {
+                    if (target.sub) {
+                        editContent.value = target.sub[index].name;
+                        target = target.sub;
+                    } else {
+                        editContent.value = target[index].name;
+                    }
+                }
+                groupEdit(target, index, spoil, group);
+            } else if (type == "delete") {
+                // 루트, 서브 그룹삭제 모달 show
+                if (group) {
+                    deleteContent.value = target.group[index].name;
+                    target = target.group;
+                } else {
+                    if (target.sub) {
+                        deleteContent.value = target.sub[index].name;
+                        target = target.sub;
+                    } else {
+                        deleteContent.value = target[index].name;
+                    }
+                }
+
+                groupDelete(target, index, spoil, group);
+            }
         };
 
         const calAdd = async (target = null) => {
@@ -445,7 +447,7 @@ export default {
 
         const spoil = async (type = null, target = null, index = null) => {
             // 루트, 서브 타겟 추가 모달
-            const ok = await spoilModal.value.show();
+            const ok = await modalSpoilAdd.value.show();
 
             if (!ok) {
                 return;
@@ -531,11 +533,16 @@ export default {
             addMember,
             delMember,
 
-            groupModal,
-            sendGroupAttr,
-
+            // 그룹 레퍼런스
+            modalGroupAdd,
+            modalGroupDelete,
+            modalGroupEdit,
+            // 그룹 컨텐츠
+            addContent,
+            deleteContent,
+            editContent,
             // 그룹 메소드
-            groupDAO,
+            groupAdd,
             groupDelete,
             groupEdit,
             showGroupModal,
@@ -556,7 +563,7 @@ export default {
             showCalModal,
 
             // 약탈 레퍼런스
-            spoilModal,
+            modalSpoilAdd,
             // 약탈 컨텐츠
             //spoilAddContent,
             spoilOption,
@@ -574,6 +581,7 @@ export default {
 };
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .groupHeader {
     padding: 10px;
