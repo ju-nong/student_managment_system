@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, computed } from "vue";
+import { ref } from "vue";
 import { useMemberStore } from "@store/member";
 
 export default {

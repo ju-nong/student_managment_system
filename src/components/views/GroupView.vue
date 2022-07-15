@@ -1,66 +1,36 @@
 <template>
     <ul class="group">
-        <li v-for="(group, index) in childGroup" :key="index" class="gro">
+        <li v-for="(group, index) in child" :key="index" class="gro">
             <div class="groupInline">
                 <div class="txt">
-                    <span v-for="(pName, pIndex) in parentNames" :key="pIndex">
+                    <span v-for="(pName, pIndex) in pNames" :key="pIndex">
                         {{ pName }} /
                     </span>
                     {{ group.name }}
                 </div>
                 <div class="btn">
-                    <button
-                        @click="
-                            $emit('showCalModal', {
-                                type: 'add',
-                                target: group,
-                            })
-                        "
-                    >
+                    <button @click="add(group, `calendar`)">
                         <img
                             src="@assets/images/calendar.png"
                             alt=""
                             class="calIcon"
                         />
                     </button>
-                    <button
-                        @click="
-                            $emit('showGroupModal', {
-                                type: 'add',
-                                target: group,
-                            })
-                        "
-                    >
+                    <button @click="add(group, `group`)">
                         <img
                             src="@assets/images/plus.jpg"
                             alt=""
                             class="plusIcon"
                         />
                     </button>
-                    <button
-                        @click="
-                            $emit('showGroupModal', {
-                                type: 'edit',
-                                target: parentGroup,
-                                index: index,
-                            })
-                        "
-                    >
+                    <button @click="edit(group, 'group')">
                         <img
                             src="@assets/images/edit.jpg"
                             alt=""
                             class="editIcon"
                         />
                     </button>
-                    <button
-                        @click="
-                            $emit('showGroupModal', {
-                                type: 'delete',
-                                target: parentGroup,
-                                index: index,
-                            })
-                        "
-                    >
+                    <button @click="remove(child, 'group', index)">
                         <img
                             src="@assets/images/delete.png"
                             alt=""
@@ -78,25 +48,11 @@
                     <div class="groupInline">
                         <div class="txt">{{ cal.name }} / {{ cal.date }}</div>
                         <div class="btn">
-                            <button
-                                @click="
-                                    $emit('showCalModal', {
-                                        type: 'edit',
-                                        target: group.cal,
-                                        index: cIndex,
-                                    })
-                                "
-                            >
-                                <img src="@assets/images/plus.jpg" alt="" />
+                            <button @click="edit(cal, 'calendar')">
+                                <img src="@assets/images/edit.jpg" alt="" />
                             </button>
                             <button
-                                @click="
-                                    $emit('showCalModal', {
-                                        type: 'delete',
-                                        target: group.cal,
-                                        index: cIndex,
-                                    })
-                                "
+                                @click="remove(group.cal, 'calendar', cIndex)"
                             >
                                 <img src="@assets/images/delete.png" alt="" />
                             </button>
@@ -106,23 +62,52 @@
             </ul>
             <GroupView
                 v-if="group.sub.length > 0"
-                :parentGroup="group"
-                :childGroup="group.sub"
-                v-bind:parentNames="[...parentNames, group.name]"
-                @showGroupModal="$emit('showGroupModal', $event)"
-                @showCalModal="$emit('showCalModal', $event)"
+                :child="group.sub"
+                v-bind:pNames="[...pNames, group.name]"
             ></GroupView>
         </li>
     </ul>
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { useModalStore, useCalendarStore } from "@store";
 export default {
     name: "GroupView",
-    props: { parentGroup: Array, childGroup: Array, parentNames: Array },
-    emits: ["showGroupModal", "showCalModal"],
-    setup(props, { emit }) {},
+    props: { parent: Array, child: Array, pNames: Array },
+    setup(props) {
+        const modal = useModalStore();
+        const calendar = useCalendarStore();
+
+        const add = (node, target) => {
+            let content;
+            if (target == "group") {
+                content = "의 서브그룹 추가";
+                calendar.set(node.sub);
+            } else {
+                content = "의 일정 추가";
+                calendar.set(node.cal);
+            }
+            modal.set("add", target, `${node.name}${content}`);
+        };
+
+        const edit = (node, target) => {
+            modal.set("edit", target, `${node.name} 수정`);
+            calendar.set(node);
+        };
+
+        const remove = (node, target, index) => {
+            const content = target == "group" ? "그룹" : "일정";
+
+            modal.set(
+                "remove",
+                "removeCalendar",
+                `${node[index].name} ${content} 삭제`,
+            );
+            calendar.set(node, index);
+        };
+
+        return { add, edit, remove };
+    },
 };
 </script>
 

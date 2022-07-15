@@ -5,28 +5,34 @@
             <button @click="rootGroupAdd">그룹 추가</button>
         </div>
         <div class="groupBody">
-            <!-- <GroupView
-                :parentGroup="state.group"
-                :childGroup="state.group"
-                :parentNames="''"
-                @showGroupModal="showGroupModal"
-                @showCalModal="showCalModal"
-            ></GroupView> -->
+            <GroupView :child="calendar.getAll" :pNames="''"></GroupView>
         </div>
-        <teleport to="body" disabled></teleport>
+        <teleport to="body">
+            <GroupModal />
+            <CalendarModal />
+            <RemoveModal />
+        </teleport>
     </div>
 </template>
 
 <script>
-import { useModalStore } from "@store";
+import { useModalStore, useCalendarStore } from "@store";
+
+import { GroupModal, CalendarModal, RemoveModal } from "@teleport";
+import { GroupView } from "@views";
 
 export default {
+    components: { GroupModal, CalendarModal, GroupView, RemoveModal },
     setup() {
         const modal = useModalStore();
+        const calendar = useCalendarStore();
 
-        const rootGroupAdd = () => {};
+        const rootGroupAdd = () => {
+            modal.set("add", "group", "그룹 추가");
+            calendar.set(calendar.getAll);
+        };
 
-        return { rootGroupAdd };
+        return { modal, calendar, rootGroupAdd };
     },
 };
 </script>

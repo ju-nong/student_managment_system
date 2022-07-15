@@ -24,6 +24,11 @@ export const useMemberStore = defineStore("member", {
         kickStaff(index) {
             this.staff.splice(index, 1);
         },
+        reset() {
+            this.leader = null;
+            this.commander = [];
+            this.staff = [];
+        },
     },
     getters: {
         getAll: (state) => state,

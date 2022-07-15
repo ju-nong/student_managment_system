@@ -2,7 +2,7 @@
     <BaseModal
         @complete="complete()"
         @reset="reset()"
-        v-if="modal.getTarget == `group`"
+        v-if="modal.getTarget == `sGroup`"
     >
         <div class="content-container">
             <h2>{{ modal.getContent }}</h2>
@@ -19,22 +19,22 @@
 
 <script>
 import { ref } from "vue";
-import { useModalStore, useCalendarStore } from "@store";
+import { useModalStore, useSpoilStore } from "@store";
 import { BaseModal } from "@teleport";
 
 export default {
     components: { BaseModal },
     setup() {
         const modal = useModalStore();
-        const calendar = useCalendarStore();
+        const spoil = useSpoilStore();
 
         const groupName = ref("");
 
         const complete = () => {
             if (modal.getType == "add") {
-                calendar.addGroup(groupName.value);
+                spoil.addGroup(groupName.value);
             } else if (modal.getType == "edit") {
-                calendar.edit(groupName.value);
+                spoil.editGroup(groupName.value);
             }
             reset();
         };

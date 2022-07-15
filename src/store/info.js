@@ -14,6 +14,10 @@ export const useInfoStore = defineStore("info", {
         setAddress(address) {
             this.address = address;
         },
+        reset() {
+            this.name = "";
+            this.address = "";
+        },
     },
     getters: {
         getAll: (state) => state,

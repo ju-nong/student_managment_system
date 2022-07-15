@@ -2,15 +2,21 @@
     <BaseModal
         @complete="complete()"
         @reset="reset()"
-        v-if="modal.getTarget == `group`"
+        v-if="modal.getTarget == 'calendar'"
     >
         <div class="content-container">
             <h2>{{ modal.getContent }}</h2>
             <div class="groupForm">
                 <input
+                    type="date"
+                    v-model="dateValue"
+                    min="2022-01-01"
+                    max="2022-12-31"
+                />
+                <input
                     type="text"
-                    placeholder="그룹 이름을 입력해주세요"
-                    v-model="groupName"
+                    placeholder="일정을 입력해주세요"
+                    v-model="calendarName"
                 />
             </div>
         </div>
@@ -28,23 +34,25 @@ export default {
         const modal = useModalStore();
         const calendar = useCalendarStore();
 
-        const groupName = ref("");
+        const calendarName = ref("");
+        const dateValue = ref("2022-07-15");
 
         const complete = () => {
             if (modal.getType == "add") {
-                calendar.addGroup(groupName.value);
-            } else if (modal.getType == "edit") {
-                calendar.edit(groupName.value);
+                calendar.addCalendar(calendarName.value, dateValue.value);
+            } else {
+                calendar.edit(calendarName.value, dateValue.value);
             }
             reset();
         };
 
         const reset = () => {
-            groupName.value = "";
+            dateValue.value = "2022-07-15";
+            calendarName.value = "";
             modal.hide();
         };
 
-        return { modal, groupName, complete, reset };
+        return { modal, dateValue, calendarName, complete, reset };
     },
 };
 </script>

@@ -9,7 +9,6 @@
 </template>
 
 <script>
-// import { useMemberStore } from "../store/member";
 import { reactive } from "vue";
 export default {
     name: "MainPage",
@@ -24,7 +23,6 @@ export default {
             state.unions = [];
 
             for (let i = 0; i < unions.length; i++) {
-                //result += `${i + 1}번째 ${JSON.stringify(unions[i])}<br>`;
                 state.unions.push(unions[i]);
             }
             console.log(state.unions);
@@ -40,5 +38,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

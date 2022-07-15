@@ -9,19 +9,10 @@
 </template>
 
 <script>
-// import { reactive } from "vue";
-// import { useRoute } from "vue-router";
 export default {
     name: "App",
     components: {},
-    setup() {
-        // const route = useRoute();
-        // const state = reactive({
-        //     pageName: route.name,
-        // });
-        // console.log(state.pageName);
-        // return { route, state };
-    },
+    setup() {},
 };
 </script>
 

@@ -3,30 +3,25 @@ import { defineStore } from "pinia";
 export const useModalStore = defineStore("modal", {
     state: () => {
         return {
-            content: null,
-            target: null,
             type: null,
-            visible: false,
+            target: null,
+            content: null,
         };
     },
     actions: {
-        setting(content, target, type) {
-            this.content = content;
-            this.target = target;
+        set(type, target, content) {
             this.type = type;
-        },
-        show() {
-            this.visible = true;
+            this.target = target;
+            this.content = content;
         },
         hide() {
-            this.visible = false;
+            this.target = null;
         },
     },
     getters: {
         getAll: (state) => state,
-        getContent: (state) => state.content,
-        getTarget: (state) => state.target,
         getType: (state) => state.type,
-        getVisible: (state) => state.visible,
+        getTarget: (state) => state.target,
+        getContent: (state) => state.content,
     },
 });
