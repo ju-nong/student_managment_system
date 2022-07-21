@@ -5,11 +5,11 @@
         v-if="modal.getTarget == `sGroup`"
     >
         <div class="content-container">
-            <h2>{{ modal.getContent }}</h2>
+            <h1>{{ modal.getContent }}</h1>
             <div class="groupForm">
                 <input
                     type="text"
-                    placeholder="그룹 이름을 입력해주세요"
+                    placeholder="그룹 이름"
                     v-model="groupName"
                 />
             </div>

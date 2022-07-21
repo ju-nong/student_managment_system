@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .backdrop {
     z-index: 100;
     display: flex;
@@ -68,10 +68,52 @@ export default {
     height: 100%;
     background: rgba($color: #000000, $alpha: 0.2);
     .modal-container {
+        width: 450px;
+        border-radius: 20px;
         background: white;
-        max-width: 320px;
-        width: 100%;
         padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        .groupForm {
+            padding: 20px 0px;
+            input {
+                width: 100%;
+                font-size: 16px;
+                padding: 10px 5px;
+                margin-bottom: 5px;
+            }
+            label {
+                font-size: 22px;
+                select {
+                    font-size: 22px;
+                }
+                padding: 20px;
+            }
+        }
+        .buttons-container {
+            text-align: right;
+
+            button {
+                padding: 5px;
+                transition: all 0.3s;
+                margin-left: 5px;
+                font-size: 16px;
+                color: $w;
+                border: 0;
+            }
+            .add {
+                background-color: $pc;
+            }
+            .edit {
+                background-color: #00c230;
+            }
+            .delete {
+                background-color: #ff0000;
+            }
+            .cancel {
+                background-color: #aaa;
+            }
+        }
     }
 }
 </style>

@@ -2,11 +2,15 @@
     <ul class="spoil">
         <li v-for="(spoil, sIndex) in child" :key="sIndex">
             <div class="menu">
-                <p class="title">{{ spoil.grade }}학년 {{ spoil.class }}반</p>
-                <button @click="add(spoil, `target`)">타겟 추가</button>
-                <button @click="add(spoil, `sGroup`)">그룹 추가</button>
-                <button @click="edit(spoil)">수정</button>
-                <button @click="remove(child, sIndex)">삭제</button>
+                <p class="spoilTitle">
+                    {{ spoil.grade }}학년 {{ spoil.class }}반
+                </p>
+                <div class="btn">
+                    <button @click="add(spoil, `target`)">🔫</button>
+                    <button @click="add(spoil, `sGroup`)">👨‍👦‍👦</button>
+                    <button @click="edit(spoil)">📝</button>
+                    <button @click="remove(child, sIndex)">❌</button>
+                </div>
             </div>
             <SpoilGroupView :child="spoil.group" :pNames="''" />
             <SpoilView :child="spoil.subTarget" />
@@ -61,9 +65,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .spoil {
-    margin: 0 0 30px 30px;
+    padding: 0px 0px 30px 30px;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -71,23 +75,35 @@ export default {
         display: flex;
         align-items: center;
         margin-bottom: 10px;
-        .title {
-            font-size: 32px;
+        justify-content: space-between;
+        .spoilTitle {
             font-weight: bold;
-            display: inline-block;
-            padding-right: 30px;
+            font-size: 24px;
         }
-        button {
-            padding: 5px 3px;
-            margin-right: 10px;
-            border-radius: 10px;
-            font-size: 16px;
-            background-color: transparent;
+        .groupTitle {
+            font-weight: bold;
+            font-size: 18px;
         }
-        button:hover {
-            border-color: transparent;
-            background-color: #000;
-            color: #fff;
+        .btn {
+            opacity: 0;
+            transition: all 0.3s;
+            button {
+                padding: 5px 3px;
+                margin-right: 10px;
+                border-radius: 10px;
+                font-size: 16px;
+                background-color: transparent;
+            }
+            button:hover {
+                border-color: transparent;
+                background-color: #000;
+                color: #fff;
+            }
+        }
+    }
+    .menu:hover {
+        .btn {
+            opacity: 1;
         }
     }
 }

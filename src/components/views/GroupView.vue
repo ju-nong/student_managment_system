@@ -9,34 +9,10 @@
                     {{ group.name }}
                 </div>
                 <div class="btn">
-                    <button @click="add(group, `calendar`)">
-                        <img
-                            src="@assets/images/calendar.png"
-                            alt=""
-                            class="calIcon"
-                        />
-                    </button>
-                    <button @click="add(group, `group`)">
-                        <img
-                            src="@assets/images/plus.jpg"
-                            alt=""
-                            class="plusIcon"
-                        />
-                    </button>
-                    <button @click="edit(group, 'group')">
-                        <img
-                            src="@assets/images/edit.jpg"
-                            alt=""
-                            class="editIcon"
-                        />
-                    </button>
-                    <button @click="remove(child, 'group', index)">
-                        <img
-                            src="@assets/images/delete.png"
-                            alt=""
-                            class="deleteIcon"
-                        />
-                    </button>
+                    <button @click="add(group, `calendar`)">📆</button>
+                    <button @click="add(group, `group`)">👨‍👦‍👦</button>
+                    <button @click="edit(group, 'group')">📝</button>
+                    <button @click="remove(child, 'group', index)">❌</button>
                 </div>
             </div>
             <ul class="group">
@@ -48,13 +24,11 @@
                     <div class="groupInline">
                         <div class="txt">{{ cal.name }} / {{ cal.date }}</div>
                         <div class="btn">
-                            <button @click="edit(cal, 'calendar')">
-                                <img src="@assets/images/edit.jpg" alt="" />
-                            </button>
+                            <button @click="edit(cal, 'calendar')">📝</button>
                             <button
                                 @click="remove(group.cal, 'calendar', cIndex)"
                             >
-                                <img src="@assets/images/delete.png" alt="" />
+                                ❌
                             </button>
                         </div>
                     </div>
@@ -73,7 +47,7 @@
 import { useModalStore, useCalendarStore } from "@store";
 export default {
     name: "GroupView",
-    props: { parent: Array, child: Array, pNames: Array },
+    props: { child: Array, pNames: Array },
     setup(props) {
         const modal = useModalStore();
         const calendar = useCalendarStore();
@@ -119,7 +93,7 @@ export default {
             overflow: hidden;
             > .groupInline {
                 > .txt {
-                    color: #ffcf00 !important;
+                    color: $y !important;
                 }
             }
         }
@@ -155,20 +129,21 @@ export default {
                         margin-left: 20px;
                         vertical-align: middle;
                         background: transparent;
+                        font-size: 22px;
+                        transition: all 0.3s;
+                        border-radius: 3px;
                         border: 0;
-                        img {
-                            width: 30px;
-                            height: 30px;
-                        }
-                        .calIcon {
-                            filter: invert(100%);
-                        }
+                        width: 33px;
+                        height: 33px;
+                    }
+                    button:hover {
+                        background-color: $y;
                     }
                 }
             }
             .groupInline:hover {
                 .txt {
-                    background-color: #ffcf00;
+                    background-color: $y;
                     color: #fff !important;
                 }
                 .btn {

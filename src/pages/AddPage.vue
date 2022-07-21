@@ -102,6 +102,7 @@ export default {
     text-align: left;
     background-color: #2e2e2e;
     padding: 32px;
+    overflow: hidden;
     > .group {
         > li::before,
         > li::after {

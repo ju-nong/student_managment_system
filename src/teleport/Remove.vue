@@ -9,7 +9,7 @@
         "
     >
         <div class="content-container">
-            <h2>{{ modal.getContent }}</h2>
+            <h1>{{ modal.getContent }}</h1>
             <p>정말로 삭제하시겠습니까?</p>
         </div>
     </BaseModal>

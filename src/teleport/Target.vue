@@ -5,7 +5,7 @@
         v-if="modal.getTarget == `target`"
     >
         <div class="content-container">
-            <h2>{{ modal.getContent }}</h2>
+            <h1>{{ modal.getContent }}</h1>
             <div class="groupForm">
                 <label for="grade">
                     학년

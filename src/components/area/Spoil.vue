@@ -4,7 +4,7 @@
         <div class="groupHeader">
             <button @click="rootSpoilAdd">추가</button>
         </div>
-        <div class="">
+        <div class="spoilBody">
             <SpoilView :child="spoil.getAll" />
         </div>
         <teleport to="body">
@@ -39,4 +39,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.spoilBody {
+    padding: 30px;
+}
+</style>

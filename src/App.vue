@@ -81,14 +81,15 @@ button {
             text-align: left;
             padding: 5px;
             font-size: 18px;
+            min-height: 36px;
             p:nth-child(1) {
-                width: 60px;
+                flex-basis: 10%;
             }
             p:nth-child(2) {
-                padding: 0px 5px;
+                flex-basis: 1%;
             }
             .nameList {
-                max-width: 100%;
+                flex-basis: 85%;
                 > span {
                     display: inline-block;
                     cursor: pointer;

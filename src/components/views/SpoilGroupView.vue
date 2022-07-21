@@ -2,15 +2,17 @@
     <ul class="inGroup">
         <li v-for="(group, index) in child" :key="index">
             <div class="menu">
-                <span v-for="(name, nIndex) in pNames" :key="nIndex">
-                    {{ name }} /
-                </span>
-                <span class="title">
+                <span class="groupTitle">
+                    <span v-for="(name, nIndex) in pNames" :key="nIndex">
+                        {{ name }} /
+                    </span>
                     {{ group.name }}
                 </span>
-                <button @click="add(group)">그룹 추가</button>
-                <button @click="edit(group)">수정</button>
-                <button @click="remove(child, index)">삭제</button>
+                <div class="btn">
+                    <button @click="add(group)">👨‍👦‍👦</button>
+                    <button @click="edit(group)">📝</button>
+                    <button @click="remove(child, index)">❌</button>
+                </div>
             </div>
 
             <SpoilGroupView
@@ -52,34 +54,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .inGroup {
     display: flex;
     flex-direction: column;
-    margin: 0 0 15px 30px;
-    > li {
-        font-size: 22px;
-        .menu {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            .title {
-                display: inline-block;
-                padding-right: 30px;
-            }
-            button {
-                padding: 5px 3px;
-                margin-right: 10px;
-                border-radius: 10px;
-                font-size: 16px;
-                background-color: transparent;
-            }
-            button:hover {
-                border-color: transparent;
-                background-color: #000;
-                color: #fff;
-            }
-        }
-    }
+    padding: 0px 0px 10px 10px;
 }
 </style>
