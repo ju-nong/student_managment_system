@@ -1,3 +1,3 @@
-export { default as GroupView } from "./GroupView";
-export { default as SpoilGroupView } from "./SpoilGroupView";
-export { default as SpoilView } from "./SpoilView";
+export { default as ViewGroup } from "./ViewGroup";
+export { default as ViewSpoilGroup } from "./ViewSpoilGroup";
+export { default as ViewSpoil } from "./ViewSpoil";

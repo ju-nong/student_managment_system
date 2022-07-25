@@ -1,22 +1,22 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { MainPage, AddPage, ViewPage } from "@pages";
+import { PageMain, PageForm, PageView } from "@pages";
 
 const routes = [
     {
         path: "/",
         alias: ["/main"],
-        name: "MainPage",
-        component: MainPage,
+        name: "PageMain",
+        component: PageMain,
     },
     {
         path: "/view",
-        name: "ViewPage",
-        component: ViewPage,
+        name: "PageView",
+        component: PageView,
     },
     {
-        path: "/add",
-        name: "AddPage",
-        component: AddPage,
+        path: "/form",
+        name: "PageForm",
+        component: PageForm,
     },
 ];
 

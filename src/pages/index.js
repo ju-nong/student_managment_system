@@ -1,3 +1,3 @@
-export { default as MainPage } from "./MainPage";
-export { default as AddPage } from "./AddPage";
-export { default as ViewPage } from "./ViewPage";
+export { default as PageMain } from "./PageMain";
+export { default as PageForm } from "./PageForm";
+export { default as PageView } from "./PageView";

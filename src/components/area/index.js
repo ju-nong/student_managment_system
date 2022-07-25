@@ -1,4 +1,4 @@
-export { default as Info } from "./Info";
-export { default as Member } from "./Member";
-export { default as Calendar } from "./Calendar";
-export { default as Spoil } from "./Spoil";
+export { default as AreaInfo } from "./AreaInfo";
+export { default as AreaMember } from "./AreaMember";
+export { default as AreaCalendar } from "./AreaCalendar";
+export { default as AreaSpoil } from "./AreaSpoil";

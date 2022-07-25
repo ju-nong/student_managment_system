@@ -1,8 +1,7 @@
 <template>
-    <!-- <h1>{{ state.pageName }}</h1> -->
-    <div id="nav">
+    <div class="nav">
         <router-link to="/">메인</router-link>
-        <router-link to="/add">연합 생성</router-link>
+        <router-link to="/form">연합 생성</router-link>
         <router-link to="/view">연합 리스트</router-link>
     </div>
     <router-view></router-view>
@@ -11,8 +10,6 @@
 <script>
 export default {
     name: "App",
-    components: {},
-    setup() {},
 };
 </script>
 
@@ -40,7 +37,7 @@ button {
     text-align: center;
     color: #2c3e50;
 }
-#nav {
+.nav {
     padding: 30px 0;
     > a {
         padding: 0 20px;
@@ -55,7 +52,6 @@ button {
         padding: 30px;
         display: flex;
         flex-direction: column;
-        //z-index: -1;
         > button {
             background-color: #3b88c3;
             color: #fff;

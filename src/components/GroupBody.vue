@@ -1,14 +1,14 @@
 <template>
     <div class="groupBody" v-if="child.length !== 0">
-        <GroupView :child="child" :pNames="''"></GroupView>
+        <ViewGroup :child="child" :parent-names="''" />
     </div>
 </template>
 
 <script>
-import { GroupView } from "@views";
+import { ViewGroup } from "@views";
 export default {
     props: { child: Array },
-    components: { GroupView },
+    components: { ViewGroup },
 };
 </script>
 
