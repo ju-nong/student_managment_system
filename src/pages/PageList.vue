@@ -52,7 +52,7 @@ export default {
     > div {
         width: 32%;
         position: relative;
-        min-height: 200px;
+        min-height: 225px;
 
         > div {
             position: absolute;
@@ -68,6 +68,9 @@ export default {
         }
         > div:hover {
             transform: translateY(-10px);
+        }
+        h2 {
+            word-break: keep-all;
         }
         h4 {
             padding: 10px 0px;
