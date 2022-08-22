@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { PageMain, PageForm, PageView } from "@pages";
+import { PageMain, PageForm, PageList, PageView } from "@pages";
 
 const routes = [
     {
@@ -9,7 +9,12 @@ const routes = [
         component: PageMain,
     },
     {
-        path: "/view",
+        path: "/list",
+        name: "PageList",
+        component: PageList,
+    },
+    {
+        path: "/view/:id",
         name: "PageView",
         component: PageView,
     },

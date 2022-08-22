@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useModalStore, useCalendarStore } from "@store";
 import { BaseModal } from "@teleport";
 
@@ -52,6 +52,10 @@ export default {
             calendarName.value = "";
             modal.hide();
         };
+
+        onMounted(() => {
+            console.log(modal.getType);
+        });
 
         return { modal, dateValue, calendarName, complete, reset };
     },

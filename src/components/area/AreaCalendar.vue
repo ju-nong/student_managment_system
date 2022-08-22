@@ -8,7 +8,7 @@
         <GroupBody :child="calendar.getAll" />
         <teleport to="body">
             <ModalGroup />
-            <CalendaModalCalendarrModal />
+            <ModalCalendar />
             <ModalRemove />
         </teleport>
     </div>

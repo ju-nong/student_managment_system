@@ -2,7 +2,7 @@
     <div class="nav">
         <router-link to="/">메인</router-link>
         <router-link to="/form">연합 생성</router-link>
-        <router-link to="/view">연합 리스트</router-link>
+        <router-link to="/list">연합 리스트</router-link>
     </div>
     <router-view></router-view>
 </template>

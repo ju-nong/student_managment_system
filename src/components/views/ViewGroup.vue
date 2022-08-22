@@ -63,6 +63,7 @@ export default {
             } else {
                 content = "의 일정 추가";
                 calendar.set(node.cal);
+                modal.set("add", "calendar", `${node.name}${content}`);
             }
             modal.set("add", target, `${node.name}${content}`);
         };

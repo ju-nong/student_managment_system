@@ -1,5 +1,6 @@
 <template>
-    <div class="groupBody" v-if="child.length !== 0">
+    <div class="groupBody">
+        <slot></slot>
         <ViewGroup :child="child" :parent-names="''" />
     </div>
 </template>
